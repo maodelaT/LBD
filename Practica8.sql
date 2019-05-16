@@ -1,0 +1,101 @@
+create procedure Lineas Normal
+select Telefono_ext, Linea_Nombre from Linea where Linea_id > 6
+group by Telefono_ext , Linea_Nombre
+exec  Lineas Normales 
+
+create procedure Pasajeros
+select Pasajero_Nombre, Apellido_Pat, Apellido_Mat from Pasajero where sexo = 'H'
+group Pasajero_Nombre, Apellido_Pat, Apellido_Mat
+Having tipo = 'Normal'
+exec Pasajeros 
+
+create procedure Horarios
+select Hora_salida, Horarios_id from Horarios
+group Horarios_id, Hora_salida
+having Hora_salida < 1200
+exec Horarios
+
+create procedure Reservas 
+select Reserva_id, Pago_id, Venta id, Total from Venta 
+group Venta_id, Pago_id, Reserva_id, Total
+having Total=550
+exec Reserva
+
+create procedure Estados de Viajes
+select Viaje_estado as 'estados del viaje' from viaje
+where Viaje_estado = 'A la espera'
+exec Estados de viajes
+
+create procedure Ventas 
+select venta.Venta_id, Reserva.Venta.id as 'ventas por empleado' from Vendedor
+inner join Reserva
+on venta.Reserva_id = Reserva.Reserva_id
+exec Vnetas 
+
+create procedure Asientos
+select reserva.asiento_id, asiento.asietno_id from Asiento
+inner join Reserva
+on reserva.autobus_id = reserva.pasajero_id
+exec Asientos 
+
+create procedure Autobus-Conductor
+select autobus.autobus_id, conductores.conductor_id from conductores 
+inner join autobuses
+on autobuses.conductor_id = conductor. conductor_id
+exec Autobus-Conducotr
+
+create procedure  Vendedores
+select sucursal.sucursal_id, vendedor.sucursal_id from sucursal
+inner join vendedor
+on sucursal.vendedor_id =vendedor.vendedor_id
+exec Vendedores
+
+create procedure Tip de asientos
+select asiento.asiento_id, tipodeasiento.asiento_id from asiento
+inner join tipodeasiento
+on asiento.tipo_asiento_id = tipodeasiento.tipo_asiento_id
+exec tip de asientos
+
+Create function Pago total
+(
+@Pago  float,
+@pago iva float
+)
+returns float 
+as
+begin
+declare @resultado float
+set @resulatado = (@Pago + @pago iva)
+return @resultado
+end 
+
+create trigger nuevo_conductor 
+on Conductores for insert 
+insert into Conductores values (00119,'Alana G.',10);
+
+create trigger Nueva_linea 
+on Linea for insert 
+insert into Linea values (11,'Autobuses de Mexico',92);
+
+DECLARE @DynamicQuery NVARCHAR(max)
+SELECT @DynamicQuery = N'
+						select
+						Sucursal_id,
+						Sucursal_Nombre,
+						Ubicacion,
+						Telefono,
+						Campo
+					From
+						dbo.SendaLBD
+					where
+						activo = 1'
+		if (@Sucursal_id is not null)
+			set @DynamicQuery = @DynamicQuery + 'ID'
+		if (@Sucursal_nombre is not null)
+			set @DynamicQuery = @DynamicQuery + 'nombre'
+		if (@Ubicacion is not null)
+			set @DynamicQuery = @DynamicQuery + 'Ubicacion'
+		if (@telefono is not null)
+			set @DynamicQuery = @DynamicQuery + 'Telefono'
+		if (@Campo is not null)
+set @DynamicQuery = @DynamicQuery + 'Campo'
